@@ -1,5 +1,17 @@
+import { Route, Routes } from "react-router";
+import PersonsTable from "./components/PersonsTable/PersonTable";
+import "./index.css";
+import PersonForm from "./components/PersonForm/PersonForm";
+
 const App = () => {
-  return <div>App</div>;
+  return (
+    <div className="container">
+      <Routes>
+        <Route path="/personlist" element={<PersonsTable />} />
+        <Route path="/personlist/add" element={<PersonForm />} />
+      </Routes>
+    </div>
+  );
 };
 
 export default App;

@@ -1,0 +1,64 @@
+.form-container {
+  width: 450px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+.title-form {
+  color: #070347;
+  font-size: 24px;
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 20px;
+}
+
+.form-add {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.form-input,
+.birth-input,
+.form-comment {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #334155;
+  outline: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.form-comment {
+  height: 160px;
+}
+.birth-date-container {
+  position: relative;
+  width: 100%;
+}
+.birth-date-container .icon-calendar {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+.btn-form {
+  width: 100%;
+  background-color: #372de9;
+  color: #e2e8f0;
+  border-radius: 14px;
+  height: 40px;
+}
+.btn-form:hover {
+  background-color: #1907e4;
+}
