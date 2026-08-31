@@ -1,40 +1,14 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Icon } from "../Icon/Icon";
 import "./PersonTable.css";
-import { calculateAge } from "../../utils/dateHelpers";
+import { calculateAge, defaultList } from "../../utils/dateHelpers";
 import { useState } from "react";
 
 function PersonsTable() {
-  const mockPersons = [
-    {
-      id: 100,
-      firstname: "Hans",
-      lastname: "Müller",
-      email: "hans.müller@gmail.com",
-      birthdate: "2001-05-21",
-      age: calculateAge("2001-05-21"),
-    },
-    {
-      id: 101,
-      firstname: "Hans",
-      lastname: "Müller",
-
-      birthdate: "1975-06-14",
-      age: calculateAge("1975-06-14"),
-    },
-    {
-      id: 102,
-      firstname: "Hans",
-      lastname: "Müller",
-      email: "hans.müller@gmail.com",
-      birthdate: "1995-03-23",
-      age: calculateAge("1995-03-23"),
-    },
-  ];
-
+  const navigate = useNavigate();
   const [persons, setPersons] = useState(() => {
     const saved = localStorage.getItem("persons_list");
-    return saved ? JSON.parse(saved) : mockPersons;
+    return saved ? JSON.parse(saved) : defaultList;
   });
 
   const handleDelete = (id) => {
@@ -42,6 +16,7 @@ function PersonsTable() {
     setPersons(updated);
     localStorage.setItem("persons_list", JSON.stringify(updated));
   };
+
   return (
     <div>
       <div className="header">
@@ -66,16 +41,26 @@ function PersonsTable() {
           </tr>
         </thead>
         <tbody className="custom-table">
-          {persons.map((person) => (
+          {persons.map((person, index) => (
             <tr key={person.id}>
-              <td>{person.id}</td>
+              <td>
+                <strong>{index + 100}</strong>
+              </td>
               <td>{person.firstname}</td>
               <td>{person.lastname}</td>
               <td>{person.email || "-"}</td>
               <td>{person.birthdate}</td>
               <td>{calculateAge(person.birthdate)}</td>
               <td>
-                <button className="btn-action btn-edit">Edit</button>
+                <button
+                  className="btn-action btn-edit"
+                  onClick={() => {
+                    console.log("Клікнули на ID:", person.id);
+                    navigate(`/personlist/edit/${person.id}`);
+                  }}
+                >
+                  Edit
+                </button>
                 <button
                   className="btn-action btn-delete"
                   onClick={() => handleDelete(person.id)}

@@ -1,13 +1,17 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { Icon } from "../Icon/Icon";
 import "./PersonForm.css";
-import { calculateAge } from "../../utils/dateHelpers";
+import { calculateAge, defaultList } from "../../utils/dateHelpers";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { personValidation } from "../../utils/personValidation";
+import { useEffect } from "react";
 
 function PersonForm() {
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const isEditMode = id !== undefined;
 
   const {
     register,
@@ -29,50 +33,45 @@ function PersonForm() {
   const birthdateValue = watch("birthdate");
   const computedAge = birthdateValue ? calculateAge(birthdateValue) : "";
 
+  useEffect(() => {
+    if (isEditMode) {
+      const savedPersons = localStorage.getItem("persons_list");
+
+      if (savedPersons) {
+        const currentList = JSON.parse(savedPersons);
+        const personEdit = currentList.find((p) => p.id === Number(id));
+        if (personEdit) {
+          reset(personEdit);
+        }
+      }
+    }
+  }, [id, isEditMode, reset]);
+
   const onSubmit = (data) => {
-    const newPerson = {
-      id: Date.now(),
-      ...data,
-      age: computedAge,
-    };
-
     const savedPersons = localStorage.getItem("persons_list");
+    let currentList = savedPersons ? JSON.parse(savedPersons) : defaultList;
 
-    const currentList = savedPersons
-      ? JSON.parse(savedPersons)
-      : [
-          {
-            id: 100,
-            firstname: "Hans",
-            lastname: "Müller",
-            email: "hans.müller@gmail.com",
-            birthdate: "2001-05-21",
-            age: 24,
-          },
-          {
-            id: 101,
-            firstname: "Hans",
-            lastname: "Müller",
-            email: "",
-            birthdate: "1975-06-14",
-            age: 51,
-          },
-          {
-            id: 102,
-            firstname: "Hans",
-            lastname: "Müller",
-            email: "hans.müller@gmail.com",
-            birthdate: "1995-03-23",
-            age: 31,
-          },
-        ];
+    if (isEditMode) {
+      currentList = currentList.map((person) =>
+        person.id === Number(id)
+          ? { ...person, ...data, age: computedAge }
+          : person,
+      );
+    } else {
+      const maxId =
+        currentList.length > 0 ? Math.max(...currentList.map((p) => p.id)) : 99;
 
-    currentList.push(newPerson);
+      const newPerson = {
+        id: maxId + 1,
+        ...data,
+        age: computedAge,
+      };
+
+      currentList.push(newPerson);
+    }
 
     localStorage.setItem("persons_list", JSON.stringify(currentList));
-
     reset();
-
     navigate("/personlist");
   };
 
@@ -82,7 +81,7 @@ function PersonForm() {
         <Link to="/personlist">
           <Icon id="icon-user" size={24} height={24} className="icon-user" />
         </Link>
-        Add Person
+        {isEditMode ? "Edit Person" : "Add Person"}
       </h2>
       <form onSubmit={handleSubmit(onSubmit)} className="form-add">
         <div>
@@ -147,7 +146,7 @@ function PersonForm() {
           {...register("comment")}
         ></textarea>
         <button className="btn-form" type="submit">
-          Save
+          {isEditMode ? "Save changes" : "Add person"}
         </button>
       </form>
     </div>

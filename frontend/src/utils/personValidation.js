@@ -1,11 +1,17 @@
 import * as Yup from "yup";
 
-export const personValidation = Yup.object({
+export const personValidation = Yup.object().shape({
   firstname: Yup.string()
-    .min(2, "Too short")
-    .required("First name is required"),
+    .required("*First name is required!")
+    .min(2, "Too short, enter a real name!"),
 
-  lastname: Yup.string().min(2, "Too short").required("Last name is required"),
-  birthdate: Yup.date().required("Birth date is required"),
-  email: Yup.string().email("Invalid email").notRequired(),
+  lastname: Yup.string()
+    .required("*Last name is required!")
+    .min(2, "Too short, enter a real lastname!"),
+
+  birthdate: Yup.string().required("*Birth date is required!"),
+
+  email: Yup.string()
+    .email("Please enter a valid email address. (e.g., name@example.com)")
+    .notRequired(),
 });

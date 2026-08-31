@@ -9,6 +9,7 @@ const App = () => {
       <Routes>
         <Route path="/personlist" element={<PersonsTable />} />
         <Route path="/personlist/add" element={<PersonForm />} />
+        <Route path="/personlist/edit/:id" element={<PersonForm />} />
       </Routes>
     </div>
   );
