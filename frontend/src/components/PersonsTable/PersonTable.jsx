@@ -3,18 +3,26 @@ import { Icon } from "../Icon/Icon";
 import "./PersonTable.css";
 import { calculateAge, defaultList } from "../../utils/dateHelpers";
 import { useState } from "react";
+import DeletePersonModal from "../DeleteModal/Modal";
 
 function PersonsTable() {
   const navigate = useNavigate();
+
   const [persons, setPersons] = useState(() => {
     const saved = localStorage.getItem("persons_list");
     return saved ? JSON.parse(saved) : defaultList;
   });
 
-  const handleDelete = (id) => {
-    const updated = persons.filter((person) => person.id !== id);
+  const [personToDelete, setPersonToDelete] = useState(null);
+
+  const handleDelete = () => {
+    if (!personToDelete) return;
+
+    const updated = persons.filter((person) => person.id !== personToDelete.id);
     setPersons(updated);
     localStorage.setItem("persons_list", JSON.stringify(updated));
+
+    setPersonToDelete(null);
   };
 
   return (
@@ -63,7 +71,7 @@ function PersonsTable() {
                 </button>
                 <button
                   className="btn-action btn-delete"
-                  onClick={() => handleDelete(person.id)}
+                  onClick={() => setPersonToDelete(person)}
                 >
                   Delete
                 </button>
@@ -72,6 +80,12 @@ function PersonsTable() {
           ))}
         </tbody>
       </table>
+      <DeletePersonModal
+        isOpen={Boolean(personToDelete)}
+        person={personToDelete}
+        onClose={() => setPersonToDelete(null)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

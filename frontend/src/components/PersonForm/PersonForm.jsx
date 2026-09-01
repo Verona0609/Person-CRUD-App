@@ -83,7 +83,7 @@ function PersonForm() {
         </Link>
         {isEditMode ? "Edit Person" : "Add Person"}
       </h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="form-add">
+      <form onSubmit={handleSubmit(onSubmit)} className="form-add" noValidate>
         <div>
           <input
             className="form-input"
