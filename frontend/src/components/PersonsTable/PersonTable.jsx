@@ -70,6 +70,7 @@ function PersonsTable() {
                   Edit
                 </button>
                 <button
+                  type="button"
                   className="btn-action btn-delete"
                   onClick={() => setPersonToDelete(person)}
                 >
